@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { UserProfilePage } from '../../components/pages/UserProfilePage';
+import { currentUser, otherUsers } from '../../data/mockData';
+
+export function getStaticPaths() {
+  const users = [currentUser, ...otherUsers];
+  return users.map(user => ({
+    params: { id: user.id },
+  }));
+}
+
+const { id } = Astro.params;
+const user = [currentUser, ...otherUsers].find(u => u.id === id);
+---
+
+<Layout title={user?.username || 'Profil Użytkownika'}>
+	<UserProfilePage id={id} client:load />
+</Layout>

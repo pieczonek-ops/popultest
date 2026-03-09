@@ -1,0 +1,18 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { ProductDetail } from '../../../components/pages/ProductDetail';
+import { products } from '../../../data/mockData';
+
+export function getStaticPaths() {
+  return products.map(product => ({
+    params: { id: product.id },
+  }));
+}
+
+const { id } = Astro.params;
+const product = products.find(p => p.id === id);
+---
+
+<Layout title={product?.title || 'Produkt'}>
+	<ProductDetail id={id} client:load />
+</Layout>

@@ -1,0 +1,18 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { ArticlePage } from '../../../components/pages/ArticlePage';
+import { articles } from '../../../data/mockData';
+
+export function getStaticPaths() {
+  return articles.map(article => ({
+    params: { id: article.id },
+  }));
+}
+
+const { id } = Astro.params;
+const article = articles.find(a => a.id === id);
+---
+
+<Layout title={article?.title || 'Artykuł'}>
+	<ArticlePage id={id} client:load />
+</Layout>

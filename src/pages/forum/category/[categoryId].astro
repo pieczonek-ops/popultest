@@ -1,0 +1,24 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { ForumCategoryView } from '../../../../components/pages/ForumCategoryView';
+import { forumCategories } from '../../../../data/mockData';
+
+export function getStaticPaths() {
+  const paths = [];
+  for (const cat of forumCategories) {
+    paths.push({ params: { categoryId: cat.id } });
+    if (cat.subcategories) {
+      for (const sub of cat.subcategories) {
+        paths.push({ params: { categoryId: sub.id } });
+      }
+    }
+  }
+  return paths;
+}
+
+const { categoryId } = Astro.params;
+---
+
+<Layout title="Kategoria Forum - GamerGold">
+	<ForumCategoryView categoryId={categoryId} client:load />
+</Layout>

@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { VideoDetail } from '../../components/pages/VideoDetail';
+import { videos } from '../../data/mockData';
+
+export function getStaticPaths() {
+  return videos.map(video => ({
+    params: { id: video.id },
+  }));
+}
+
+const { id } = Astro.params;
+const video = videos.find(v => v.id === id);
+---
+
+<Layout title={video?.title || 'Wideo'}>
+	<VideoDetail id={id} client:load />
+</Layout>
