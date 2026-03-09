@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { ArticlePage } from '../../../components/pages/ArticlePage';
-import { articles } from '../../../data/mockData';
+import { ArticlePage } from '../../components/pages/ArticlePage';
+import { articles } from '../../data/mockData';
 
 export function getStaticPaths() {
   return articles.map(article => ({
