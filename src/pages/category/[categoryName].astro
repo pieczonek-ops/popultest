@@ -1,7 +1,7 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
-import { Category } from '../../../components/pages/Category';
-import { articles } from '../../../data/mockData';
+import Layout from '../../layouts/Layout.astro';
+import { Category } from '../../components/pages/Category';
+import { articles } from '../../data/mockData';
 
 export function getStaticPaths() {
   const categories = [...new Set(articles.map(a => a.category.toLowerCase()))];
