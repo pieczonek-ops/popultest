@@ -13,13 +13,21 @@ export interface Article {
 export const articles: Article[] = [
   {
     id: '1',
-    title: 'Nowa era RPG: Zapowiedź "Shadow Realm"',
-    excerpt: 'Twórcy legendarnych serii ogłaszają swój najbardziej ambitny projekt w historii. Czy to będzie gra dekady?',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat...',
+    title: '„Najszybciej sprzedająca się odsłona w serii”. Resident Evil Requiem odnosi wielki sukces',
+    excerpt: 'Capcom oficjalnie potwierdził nowy wynik Resident Evil Requiem i tak jak mogliśmy się spodziewać. Gra osiągnęła wyjątkowy rezultat.
+
+Capcom już kilka dni po premierze potwierdził pierwszy wynik sprzedaży Resident Evil Requiem, ale teraz firma wraca z kolejną aktualizacją. Japoński wydawca nie ukrywa zadowolenia i chwali się naprawdę imponującym osiągnięciem najnowszej odsłony kultowej serii survival horrorów.',
+    content: 'Resident Evil Requiem przekroczył właśnie barierę 6 milionów sprzedanych egzemplarzy. To rezultat, który robi ogromne wrażenie - szczególnie biorąc pod uwagę tempo, w jakim gra zdobyła tak dużą liczbę graczy na całym świecie.
+
+Wybrane okazje dla Ciebie
+Reklama
+Nowa odsłona radzi sobie znacznie lepiej niż poprzednie części serii. Resident Evil 4 (2023), który wcześniej był rekordzistą, potrzebował 9 miesięcy, by osiągnąć poziom 6 mln sprzedanych kopii. Z kolei Resident Evil Village dochodził do tego wyniku przez blisko 11 miesięcy. Capcom w przypadku Resident Evil Requiem mówi więc o bezprecedensowym sukcesie w historii ponad trzydziestoletniej marki.
+
+Firma w oficjalnej informacji prasowej potwierdziła, że Resident Evil Requiem jest obecnie najszybciej sprzedającą się odsłoną w całej serii. Żadna wcześniejsza część uniwersum nie była w stanie przekroczyć 6 milionów egzemplarzy w tak krótkim czasie, co tylko pokazuje, jak ogromne zainteresowanie wzbudziła najnowsza produkcja Capcomu.',
     category: 'PC',
     author: 'Jan Kowalski',
     date: '2024-03-02',
-    imageUrl: 'https://picsum.photos/seed/rpg/1200/600',
+    imageUrl: 'https://pliki.ppe.pl/storage/ca3cdab4a4bf56256b02/ca3cdab4a4bf56256b02.jpg',
     featured: true,
   },
   {
