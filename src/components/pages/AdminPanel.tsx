@@ -174,12 +174,12 @@ export const AdminPanel = () => {
   };
 
   const fetchProducts = async () => {
-    const snap = await getDocs(collection(db, 'products'));
+    const snap = await getDocs(collection(db, 'store'));
     setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() })) as Product[]);
   };
 
   const fetchMatches = async () => {
-    const snap = await getDocs(collection(db, 'esportMatches'));
+    const snap = await getDocs(collection(db, 'esport'));
     setMatches(snap.docs.map(d => ({ id: d.id, ...d.data() })) as EsportMatch[]);
   };
 
@@ -189,12 +189,12 @@ export const AdminPanel = () => {
   };
 
   const fetchForumCats = async () => {
-    const snap = await getDocs(collection(db, 'forumCategories'));
+    const snap = await getDocs(collection(db, 'forum'));
     setForumCats(snap.docs.map(d => ({ id: d.id, ...d.data() })) as ForumCategory[]);
   };
 
   const fetchConfigs = async () => {
-    const snap = await getDocs(collection(db, 'siteConfig'));
+    const snap = await getDocs(collection(db, 'config'));
     setConfigs(snap.docs.map(d => ({ id: d.id, ...d.data() })) as SiteConfig[]);
   };
 
@@ -214,11 +214,11 @@ export const AdminPanel = () => {
     const collectionMap: Record<Tab, string> = {
       articles: 'articles',
       videos: 'videos',
-      store: 'products',
-      esport: 'esportMatches',
-      forum: 'forumCategories',
+      store: 'store',
+      esport: 'esport',
+      forum: 'forum',
       comments: 'comments',
-      config: 'siteConfig'
+      config: 'config'
     };
 
     const collName = collectionMap[activeTab];
@@ -352,7 +352,17 @@ export const AdminPanel = () => {
               onClick={() => {
                 setActiveTab(tab.id);
                 setIsEditing(null);
-                setFormData({});
+                // Initialize with default values to ensure validation passes even if user doesn't change them
+                const defaults: Record<string, any> = {
+                  articles: { category: 'PC', featured: false, date: new Date().toISOString().split('T')[0] },
+                  videos: { category: 'Zwiastuny', date: new Date().toISOString().split('T')[0] },
+                  store: { platform: 'Steam', rating: 5, reviewsCount: 0 },
+                  esport: { status: 'upcoming', scoreA: 0, scoreB: 0, date: new Date().toISOString().split('T')[0] },
+                  forum: { topicsCount: 0, postsCount: 0 },
+                  comments: { likes: 0, date: new Date().toISOString().split('T')[0] },
+                  config: { type: 'menu', data: {} }
+                };
+                setFormData(defaults[tab.id] || {});
               }}
               className={cn(
                 "flex items-center gap-2 px-5 py-3 rounded-2xl font-bold transition-all",
@@ -573,7 +583,7 @@ export const AdminPanel = () => {
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => handleEdit(item)} className="p-2 text-gray-400 hover:text-blue-600"><Edit2 size={18} /></button>
-                  <button onClick={() => handleDelete(item.id, 'products')} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
+                  <button onClick={() => handleDelete(item.id, 'store')} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
                 </div>
               </div>
             ))}
@@ -586,7 +596,7 @@ export const AdminPanel = () => {
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => handleEdit(item)} className="p-2 text-gray-400 hover:text-blue-600"><Edit2 size={18} /></button>
-                  <button onClick={() => handleDelete(item.id, 'esportMatches')} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
+                  <button onClick={() => handleDelete(item.id, 'esport')} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
                 </div>
               </div>
             ))}
@@ -609,7 +619,7 @@ export const AdminPanel = () => {
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => handleEdit(item)} className="p-2 text-gray-400 hover:text-blue-600"><Edit2 size={18} /></button>
-                  <button onClick={() => handleDelete(item.id, 'forumCategories')} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
+                  <button onClick={() => handleDelete(item.id, 'forum')} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
                 </div>
               </div>
             ))}
@@ -622,7 +632,7 @@ export const AdminPanel = () => {
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => handleEdit(item)} className="p-2 text-gray-400 hover:text-blue-600"><Edit2 size={18} /></button>
-                  <button onClick={() => handleDelete(item.id, 'siteConfig')} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
+                  <button onClick={() => handleDelete(item.id, 'config')} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
                 </div>
               </div>
             ))}

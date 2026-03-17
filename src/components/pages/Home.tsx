@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from '../../components/Link';
-import { articles as mockArticles, products, esportMatches, videos } from '../../data/mockData';
+import { articles as mockArticles, products as mockProducts, esportMatches, videos } from '../../data/mockData';
 import { NewsCard } from '../../components/NewsCard';
 import { motion } from 'motion/react';
 import { TrendingUp, Zap, Star, Hash, Gamepad2, ShoppingBag, Trophy, Play, ChevronRight, Clock, Eye, Loader2 } from 'lucide-react';
@@ -63,29 +63,50 @@ const PlatformList = () => {
 
 export const Home = () => {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [matches, setMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchData = async () => {
       try {
-        const q = query(collection(db, 'articles'), orderBy('date', 'desc'), limit(10));
-        const querySnapshot = await getDocs(q);
-        const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Article[];
+        const [articlesSnap, productsSnap, matchesSnap] = await Promise.all([
+          getDocs(query(collection(db, 'articles'), orderBy('date', 'desc'), limit(10))),
+          getDocs(query(collection(db, 'store'), limit(8))),
+          getDocs(query(collection(db, 'esport'), limit(5)))
+        ]);
+
+        const fetchedArticles = articlesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Article[];
+        const fetchedProducts = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const fetchedMatches = matchesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
-        if (fetched.length > 0) {
-          setArticles(fetched);
+        if (fetchedArticles.length > 0) {
+          setArticles(fetchedArticles);
         } else {
-          // Fallback to mock data if Firestore is empty
           setArticles(mockArticles as Article[]);
         }
+
+        if (fetchedProducts.length > 0) {
+          setProducts(fetchedProducts);
+        } else {
+          setProducts(mockProducts);
+        }
+
+        if (fetchedMatches.length > 0) {
+          setMatches(fetchedMatches);
+        } else {
+          setMatches(esportMatches);
+        }
       } catch (error) {
-        console.error("Error fetching articles:", error);
+        console.error("Error fetching data:", error);
         setArticles(mockArticles as Article[]);
+        setProducts(mockProducts);
+        setMatches(esportMatches);
       } finally {
         setLoading(false);
       }
     };
-    fetchArticles();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -102,7 +123,7 @@ export const Home = () => {
   
   const popularTopics = ['Cyberpunk 2077', 'Elden Ring', 'GTA VI', 'RTX 5090', 'PS5 Pro', 'Esport'];
   const hotDeals = products.filter(p => p.originalPrice).slice(0, 4);
-  const upcomingMatches = esportMatches.filter(m => m.status !== 'finished').slice(0, 3);
+  const upcomingMatches = matches.filter(m => m.status !== 'finished').slice(0, 3);
   const videoHighlights = videos.slice(0, 3);
 
   return (

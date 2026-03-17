@@ -1,10 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '../../components/Link';
-import { forumCategories } from '../../data/mockData';
-import { MessageSquare, MessageCircle, Clock, User, ChevronRight } from 'lucide-react';
+import { forumCategories as mockCategories } from '../../data/mockData';
+import { MessageSquare, MessageCircle, Clock, User, ChevronRight, Loader2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { db } from '../../lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 export const Forum = () => {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'forum'));
+        const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        if (fetched.length > 0) {
+          setCategories(fetched);
+        } else {
+          setCategories(mockCategories);
+        }
+      } catch (error) {
+        console.error("Error fetching forum categories:", error);
+        setCategories(mockCategories);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+      </div>
+    );
+  }
+
   return (
     <div className="pt-24 min-h-screen bg-white text-gray-600">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -28,7 +62,7 @@ export const Forum = () => {
 
         {/* Forum Categories (phpBB style) */}
         <div className="space-y-8">
-          {forumCategories.map((category) => (
+          {categories.map((category) => (
             <div key={category.id} className="border border-gray-100 rounded-lg overflow-hidden shadow-sm bg-white">
               {/* Category Header */}
               <div className="bg-gray-50 px-6 py-3 border-b border-gray-100 flex items-center justify-between">

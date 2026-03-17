@@ -1,11 +1,47 @@
-import React, { useState } from 'react';
-import { products } from '../../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { products as mockProducts, type Product } from '../../data/mockData';
 import { ProductCard } from '../../components/ProductCard';
 import { motion } from 'motion/react';
-import { Search, Filter, Tag, Zap, ShieldCheck, Headphones, RefreshCcw, TrendingUp } from 'lucide-react';
+import { Search, Filter, Tag, Zap, ShieldCheck, Headphones, RefreshCcw, TrendingUp, Loader2 } from 'lucide-react';
+import { db } from '../../lib/firebase';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 
 export const StoreHome = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'store'));
+        const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Product[];
+        
+        // Merge with mock products, avoiding duplicates by ID
+        const merged = [...fetched];
+        mockProducts.forEach(mp => {
+          if (!merged.find(p => p.id === mp.id)) {
+            merged.push(mp);
+          }
+        });
+        setProducts(merged);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setProducts(mockProducts);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+      </div>
+    );
+  }
   
   const filteredProducts = products.filter(p => 
     p.title.toLowerCase().includes(searchQuery.toLowerCase())

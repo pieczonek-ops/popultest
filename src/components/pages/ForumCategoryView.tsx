@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '../../components/Link';
-import { forumCategories, forumTopics } from '../../data/mockData';
+import { forumCategories, forumTopics as mockTopics } from '../../data/mockData';
 import { 
   MessageSquare, 
   ChevronRight, 
@@ -10,11 +10,20 @@ import {
   MessageCircle, 
   Plus,
   ArrowLeft,
-  Search
+  Search,
+  Loader2,
+  X
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { db, auth } from '../../lib/firebase';
+import { collection, getDocs, query, where, orderBy, addDoc } from 'firebase/firestore';
 
 export const ForumCategoryView = ({ categoryId }: { categoryId?: string }) => {
+  const [topics, setTopics] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showNewTopicModal, setShowNewTopicModal] = useState(false);
+  const [newTopicData, setNewTopicData] = useState({ title: '', content: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   // Find the category (could be a main category or a subcategory)
   const findCategory = (id: string) => {
     for (const cat of forumCategories) {
@@ -28,13 +37,86 @@ export const ForumCategoryView = ({ categoryId }: { categoryId?: string }) => {
   };
 
   const category = findCategory(categoryId || '');
-  const topics = forumTopics.filter(t => t.categoryId === categoryId);
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      if (!categoryId) return;
+      try {
+        const q = query(
+          collection(db, 'forum_topics'), 
+          where('categoryId', '==', categoryId),
+          orderBy('date', 'desc')
+        );
+        const querySnapshot = await getDocs(q);
+        const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Merge with mock topics
+        const merged = [...fetched];
+        mockTopics.filter(t => t.categoryId === categoryId).forEach(mt => {
+          if (!merged.find(t => t.id === mt.id)) {
+            merged.push(mt);
+          }
+        });
+        setTopics(merged);
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+        setTopics(mockTopics.filter(t => t.categoryId === categoryId));
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTopics();
+  }, [categoryId]);
+
+  const handleCreateTopic = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!auth.currentUser) {
+      alert('Musisz być zalogowany, aby dodać temat.');
+      return;
+    }
+    if (!newTopicData.title || !newTopicData.content) return;
+
+    setIsSubmitting(true);
+    try {
+      const topicData = {
+        categoryId,
+        title: newTopicData.title,
+        content: newTopicData.content,
+        author: auth.currentUser.displayName || auth.currentUser.email || 'Anonim',
+        authorUid: auth.currentUser.uid,
+        date: new Date().toISOString(),
+        views: 0,
+        replies: 0,
+        lastPost: {
+          author: auth.currentUser.displayName || auth.currentUser.email || 'Anonim',
+          date: 'Przed chwilą'
+        }
+      };
+      const docRef = await addDoc(collection(db, 'forum_topics'), topicData);
+      setTopics([{ id: docRef.id, ...topicData }, ...topics]);
+      setShowNewTopicModal(false);
+      setNewTopicData({ title: '', content: '' });
+    } catch (error) {
+      console.error("Error creating topic:", error);
+      alert('Błąd podczas tworzenia tematu.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (!category) {
     return (
       <div className="pt-32 text-center text-white">
         <h2 className="text-2xl font-bold mb-4">Kategoria nie znaleziona</h2>
         <Link to="/forum" className="text-gold hover:underline">Powrót do forum</Link>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
       </div>
     );
   }
@@ -65,7 +147,10 @@ export const ForumCategoryView = ({ categoryId }: { categoryId?: string }) => {
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
             </div>
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold flex items-center space-x-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/10">
+            <button 
+              onClick={() => setShowNewTopicModal(true)}
+              className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold flex items-center space-x-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/10"
+            >
               <Plus size={18} />
               <span>Nowy Temat</span>
             </button>
@@ -140,6 +225,77 @@ export const ForumCategoryView = ({ categoryId }: { categoryId?: string }) => {
             )}
           </div>
         </div>
+
+        {/* New Topic Modal */}
+        <AnimatePresence>
+          {showNewTopicModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowNewTopicModal(false)}
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden"
+              >
+                <div className="p-8">
+                  <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-2xl font-display font-bold text-gray-900">Nowy Temat</h2>
+                    <button onClick={() => setShowNewTopicModal(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
+                      <X size={24} />
+                    </button>
+                  </div>
+                  <form onSubmit={handleCreateTopic} className="space-y-6">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Tytuł tematu</label>
+                      <input 
+                        required
+                        type="text" 
+                        value={newTopicData.title}
+                        onChange={(e) => setNewTopicData({ ...newTopicData, title: e.target.value })}
+                        placeholder="O czym chcesz podyskutować?"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-blue-600 outline-none transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Treść wiadomości</label>
+                      <textarea 
+                        required
+                        rows={8}
+                        value={newTopicData.content}
+                        onChange={(e) => setNewTopicData({ ...newTopicData, content: e.target.value })}
+                        placeholder="Napisz coś więcej..."
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-blue-600 outline-none transition-all resize-none"
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-4">
+                      <button 
+                        type="button"
+                        onClick={() => setShowNewTopicModal(false)}
+                        className="px-6 py-3 text-gray-500 font-bold hover:text-gray-700 transition-colors"
+                      >
+                        Anuluj
+                      </button>
+                      <button 
+                        disabled={isSubmitting}
+                        type="submit"
+                        className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center space-x-2 disabled:opacity-50"
+                      >
+                        {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
+                        <span>Załóż temat</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
 
         {/* Pagination Placeholder */}
         <div className="mt-8 flex justify-between items-center">

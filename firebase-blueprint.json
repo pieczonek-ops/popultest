@@ -103,6 +103,36 @@
         "data": { "type": "object" }
       },
       "required": ["type", "data"]
+    },
+    "ForumTopic": {
+      "title": "ForumTopic",
+      "description": "A topic in a forum category.",
+      "type": "object",
+      "properties": {
+        "categoryId": { "type": "string" },
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "authorId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "repliesCount": { "type": "number" },
+        "viewsCount": { "type": "number" },
+        "lastPost": { "type": "string" }
+      },
+      "required": ["categoryId", "title", "author", "authorId", "createdAt"]
+    },
+    "ForumReply": {
+      "title": "ForumReply",
+      "description": "A reply to a forum topic.",
+      "type": "object",
+      "properties": {
+        "topicId": { "type": "string" },
+        "content": { "type": "string" },
+        "author": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorAvatar": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["topicId", "content", "author", "authorId", "createdAt"]
     }
   },
   "firestore": {
@@ -114,11 +144,11 @@
       "schema": "Video",
       "description": "Collection of videos."
     },
-    "/products/{productId}": {
+    "/store/{productId}": {
       "schema": "Product",
       "description": "Collection of store products."
     },
-    "/esportMatches/{matchId}": {
+    "/esport/{matchId}": {
       "schema": "EsportMatch",
       "description": "Collection of esport matches."
     },
@@ -126,11 +156,19 @@
       "schema": "Comment",
       "description": "Collection of user comments."
     },
-    "/forumCategories/{categoryId}": {
+    "/forum/{categoryId}": {
       "schema": "ForumCategory",
       "description": "Collection of forum categories."
     },
-    "/siteConfig/{configId}": {
+    "/forum_topics/{topicId}": {
+      "schema": "ForumTopic",
+      "description": "Collection of forum topics."
+    },
+    "/forum_replies/{replyId}": {
+      "schema": "ForumReply",
+      "description": "Collection of forum replies."
+    },
+    "/config/{configId}": {
       "schema": "SiteConfig",
       "description": "Collection of site configuration documents."
     }

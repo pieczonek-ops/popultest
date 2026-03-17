@@ -1,15 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '../../components/Link';
-import { products } from '../../data/mockData';
+import { products as mockProducts } from '../../data/mockData';
 import { useCart } from '../../context/CartContext';
-import { Star, ShoppingCart, ShieldCheck, Zap, Globe, Clock, ChevronLeft } from 'lucide-react';
+import { Star, ShoppingCart, ShieldCheck, Zap, Globe, Clock, ChevronLeft, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
+import { db } from '../../lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 export const ProductDetail = ({ id }: { id?: string }) => {
   const { addToCart } = useCart();
-  const product = products.find(p => p.id === id);
-  const [activeImage, setActiveImage] = useState(product?.imageUrl || '');
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeImage, setActiveImage] = useState('');
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) return;
+      try {
+        const docRef = doc(db, 'store', id);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const data = { id: docSnap.id, ...docSnap.data() };
+          setProduct(data);
+          setActiveImage(data.imageUrl || '');
+        } else {
+          // Fallback to mock data
+          const mockProduct = mockProducts.find(p => p.id === id);
+          if (mockProduct) {
+            setProduct(mockProduct);
+            setActiveImage(mockProduct.imageUrl || '');
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        const mockProduct = mockProducts.find(p => p.id === id);
+        if (mockProduct) {
+          setProduct(mockProduct);
+          setActiveImage(mockProduct.imageUrl || '');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -20,7 +64,7 @@ export const ProductDetail = ({ id }: { id?: string }) => {
     );
   }
 
-  const gallery = [product.imageUrl, ...(product.galleryImages || [])];
+  const gallery = product ? [product.imageUrl, ...(product.galleryImages || [])] : [];
 
   const discount = product.originalPrice 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 

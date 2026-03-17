@@ -1,13 +1,46 @@
-import React, { useState } from 'react';
-import { articles, esportEvents, esportMatches } from '../../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { articles as mockArticles, esportEvents, esportMatches as mockMatches } from '../../data/mockData';
 import { NewsCard } from '../../components/NewsCard';
 import { motion } from 'motion/react';
-import { Trophy, Calendar, BarChart3, ChevronRight, MapPin, DollarSign, Clock } from 'lucide-react';
+import { Trophy, Calendar, BarChart3, ChevronRight, MapPin, DollarSign, Clock, Loader2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { db } from '../../lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 export const Esports = () => {
-  const esportNews = articles.filter(a => a.category === 'Esports');
+  const [matches, setMatches] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const esportNews = mockArticles.filter(a => a.category === 'Esports');
   const [activeTab, setActiveTab] = useState<'calendar' | 'results'>('calendar');
+
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'esport'));
+        const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        if (fetched.length > 0) {
+          setMatches(fetched);
+        } else {
+          setMatches(mockMatches);
+        }
+      } catch (error) {
+        console.error("Error fetching esport matches:", error);
+        setMatches(mockMatches);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMatches();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+      </div>
+    );
+  }
 
   return (
     <div className="pt-20 bg-white">
@@ -123,8 +156,8 @@ export const Esports = () => {
               ) : (
                 <div className="space-y-8">
                   {esportEvents.map(event => {
-                    const matches = esportMatches.filter(m => m.eventId === event.id);
-                    if (matches.length === 0) return null;
+                    const eventMatches = matches.filter(m => m.eventId === event.id);
+                    if (eventMatches.length === 0) return null;
                     return (
                       <div key={event.id}>
                         <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center space-x-2">
@@ -132,7 +165,7 @@ export const Esports = () => {
                           <span>{event.name}</span>
                         </h4>
                         <div className="space-y-3">
-                          {matches.map(match => (
+                          {eventMatches.map(match => (
                             <div key={match.id} className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4 shadow-sm">
                               {/* Status & Time */}
                               <div className="flex flex-col items-center justify-center min-w-[80px] border-r border-gray-100 pr-4">
@@ -191,7 +224,7 @@ export const Esports = () => {
                 <span>Na żywo</span>
               </h3>
               <div className="space-y-4">
-                {esportMatches.filter(m => m.status === 'live').map(match => (
+                {matches.filter(m => m.status === 'live').map(match => (
                   <div key={match.id} className="p-4 bg-gray-50 rounded-xl border border-red-100">
                     <div className="flex justify-between text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">
                       <span>{match.game}</span>

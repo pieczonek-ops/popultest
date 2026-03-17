@@ -1,13 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '../../components/Link';
-import { videos, streams } from '../../data/mockData';
+import { videos as mockVideos, streams } from '../../data/mockData';
 import { motion } from 'motion/react';
-import { Play, Eye, Clock, User, Radio, ExternalLink, Search } from 'lucide-react';
+import { Play, Eye, Clock, User, Radio, ExternalLink, Search, Loader2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { db } from '../../lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 export const Videos = () => {
   const [activeCategory, setActiveCategory] = useState('Wszystkie');
+  const [videos, setVideos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const categories = ['Wszystkie', 'Zwiastuny', 'Recenzje', 'Rankingi', 'Sprzęt', 'Dokumenty', 'Esport'];
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'videos'));
+        const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        if (fetched.length > 0) {
+          setVideos(fetched);
+        } else {
+          setVideos(mockVideos);
+        }
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+        setVideos(mockVideos);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchVideos();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+      </div>
+    );
+  }
 
   const filteredVideos = activeCategory === 'Wszystkie' 
     ? videos 
