@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from './Link';
-import { ShoppingCart, Star, Globe, ShieldCheck } from 'lucide-react';
+import { ShoppingCart, Star, Globe } from 'lucide-react';
 import { Product } from '../data/mockData';
 import { motion } from 'motion/react';
 import { useCart } from '../context/CartContext';

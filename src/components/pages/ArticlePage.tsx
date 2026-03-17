@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from '../../components/Link';
 import { articles } from '../../data/mockData';
-import { Calendar, User, Share2, MessageCircle, Bookmark, ChevronLeft } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Calendar, User, Share2, MessageCircle, Bookmark } from 'lucide-react';
 
 export const ArticlePage = ({ id }: { id?: string }) => {
   const article = articles.find((a) => a.id === id);
