@@ -1,18 +1,30 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { ArticlePage } from '../../components/pages/ArticlePage';
-import { articles } from '../../data/mockData';
-
-export function getStaticPaths() {
-  return articles.map(article => ({
-    params: { id: article.id },
-  }));
-}
+import { articles as mockArticles } from '../../data/mockData';
+import { db } from '../../lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const { id } = Astro.params;
-const article = articles.find(a => a.id === id);
+
+// Fetch article for title (optional, but good for SEO/Layout)
+let articleTitle = 'Artykuł';
+try {
+  if (id) {
+    const docRef = doc(db, 'articles', id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      articleTitle = docSnap.data().title;
+    } else {
+      const mock = mockArticles.find(a => a.id === id);
+      if (mock) articleTitle = mock.title;
+    }
+  }
+} catch (e) {
+  console.error(e);
+}
 ---
 
-<Layout title={article?.title || 'Artykuł'}>
+<Layout title={articleTitle}>
 	<ArticlePage id={id} client:load />
 </Layout>

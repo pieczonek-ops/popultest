@@ -1,18 +1,30 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { ForumTopicView } from '../../../components/pages/ForumTopicView';
-import { forumTopics } from '../../../data/mockData';
-
-export function getStaticPaths() {
-  return forumTopics.map(topic => ({
-    params: { topicId: topic.id },
-  }));
-}
+import { forumTopics as mockTopics } from '../../../data/mockData';
+import { db } from '../../../lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const { topicId } = Astro.params;
-const topic = forumTopics.find(t => t.id === topicId);
+
+// Fetch topic for title
+let topicTitle = 'Temat Forum';
+try {
+  if (topicId) {
+    const docRef = doc(db, 'forum_topics', topicId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      topicTitle = docSnap.data().title;
+    } else {
+      const mock = mockTopics.find(t => t.id === topicId);
+      if (mock) topicTitle = mock.title;
+    }
+  }
+} catch (e) {
+  console.error(e);
+}
 ---
 
-<Layout title={topic?.title || 'Temat Forum'}>
+<Layout title={topicTitle}>
 	<ForumTopicView topicId={topicId} client:load />
 </Layout>

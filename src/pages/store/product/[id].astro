@@ -1,18 +1,30 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { ProductDetail } from '../../../components/pages/ProductDetail';
-import { products } from '../../../data/mockData';
-
-export function getStaticPaths() {
-  return products.map(product => ({
-    params: { id: product.id },
-  }));
-}
+import { products as mockProducts } from '../../../data/mockData';
+import { db } from '../../../lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const { id } = Astro.params;
-const product = products.find(p => p.id === id);
+
+// Fetch product for title
+let productTitle = 'Produkt';
+try {
+  if (id) {
+    const docRef = doc(db, 'store', id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      productTitle = docSnap.data().title;
+    } else {
+      const mock = mockProducts.find(p => p.id === id);
+      if (mock) productTitle = mock.title;
+    }
+  }
+} catch (e) {
+  console.error(e);
+}
 ---
 
-<Layout title={product?.title || 'Produkt'}>
+<Layout title={productTitle}>
 	<ProductDetail id={id} client:load />
 </Layout>

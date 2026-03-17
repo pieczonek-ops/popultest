@@ -1,24 +1,40 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { ForumCategoryView } from '../../../components/pages/ForumCategoryView';
-import { forumCategories } from '../../../data/mockData';
-
-export function getStaticPaths() {
-  const paths = [];
-  for (const cat of forumCategories) {
-    paths.push({ params: { categoryId: cat.id } });
-    if (cat.subcategories) {
-      for (const sub of cat.subcategories) {
-        paths.push({ params: { categoryId: sub.id } });
-      }
-    }
-  }
-  return paths;
-}
+import { forumCategories as mockCategories } from '../../../data/mockData';
+import { db } from '../../../lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const { categoryId } = Astro.params;
+
+// Fetch category for title
+let categoryTitle = 'Kategoria Forum';
+try {
+  if (categoryId) {
+    const docRef = doc(db, 'forum', categoryId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      categoryTitle = docSnap.data().name;
+    } else {
+      const findCategory = (cats: any[]): any => {
+        for (const cat of cats) {
+          if (cat.id === categoryId) return cat;
+          if (cat.subcategories) {
+            const found = findCategory(cat.subcategories);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      const mock = findCategory(mockCategories);
+      if (mock) categoryTitle = mock.name;
+    }
+  }
+} catch (e) {
+  console.error(e);
+}
 ---
 
-<Layout title="Kategoria Forum - GamerGold">
+<Layout title={categoryTitle}>
 	<ForumCategoryView categoryId={categoryId} client:load />
 </Layout>
