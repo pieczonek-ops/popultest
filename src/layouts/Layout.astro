@@ -20,7 +20,7 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title} | GamerGold</title>
 	</head>
-	<body class="bg-dark-bg text-white selection:bg-gold selection:text-black">
+	<body class="bg-dark-bg text-gray-900 selection:bg-blue-600 selection:text-white">
 		<CartProvider client:load>
 			<Navbar client:load />
 			<main>

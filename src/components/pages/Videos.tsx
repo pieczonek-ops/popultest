@@ -14,9 +14,9 @@ export const Videos = () => {
     : videos.filter(v => v.category === activeCategory);
 
   return (
-    <div className="pt-20 min-h-screen bg-dark-bg">
+    <div className="pt-20 min-h-screen bg-white">
       {/* Video Hero / Featured Stream */}
-      <section className="relative h-[60vh] flex items-center overflow-hidden">
+      <section className="relative h-[60vh] flex items-center overflow-hidden bg-gray-900">
         <div className="absolute inset-0 z-0">
           <img 
             src={streams[0].thumbnailUrl} 
@@ -24,7 +24,7 @@ export const Videos = () => {
             className="w-full h-full object-cover opacity-40"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -40,20 +40,20 @@ export const Videos = () => {
               </span>
               <span className="text-gray-300 text-sm font-bold uppercase tracking-widest">{streams[0].platform}</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 leading-tight text-white">
               {streams[0].title}
             </h1>
             <div className="flex items-center space-x-6 mb-8 text-gray-300">
               <div className="flex items-center space-x-2">
-                <User size={18} className="text-gold" />
+                <User size={18} className="text-blue-400" />
                 <span className="font-bold">{streams[0].streamer}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Eye size={18} className="text-gold" />
+                <Eye size={18} className="text-blue-400" />
                 <span>{streams[0].viewerCount} widzów</span>
               </div>
             </div>
-            <button className="px-8 py-4 gold-gradient text-black font-bold rounded-xl hover:scale-105 transition-transform flex items-center space-x-3">
+            <button className="px-8 py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all flex items-center space-x-3 shadow-lg">
               <Play size={20} fill="currentColor" />
               <span>Oglądaj teraz</span>
             </button>
@@ -65,12 +65,12 @@ export const Videos = () => {
         {/* Live Streams Section */}
         <section className="mb-20">
           <div className="flex items-center justify-between mb-10">
-            <h2 className="text-3xl font-display font-bold flex items-center space-x-3">
+            <h2 className="text-3xl font-display font-bold flex items-center space-x-3 text-gray-900">
               <Radio className="text-red-600" />
               <span>Trwające Streamy</span>
             </h2>
-            <div className="h-px flex-grow mx-8 bg-dark-border hidden md:block" />
-            <button className="text-gold text-sm font-bold hover:underline flex items-center space-x-1">
+            <div className="h-px flex-grow mx-8 bg-gray-100 hidden md:block" />
+            <button className="text-blue-600 text-sm font-bold hover:underline flex items-center space-x-1">
               <span>Zobacz wszystkie</span>
               <ExternalLink size={14} />
             </button>
@@ -83,7 +83,7 @@ export const Videos = () => {
                 whileHover={{ y: -5 }}
                 className="group cursor-pointer"
               >
-                <div className="relative aspect-video rounded-xl overflow-hidden mb-4 border border-dark-border">
+                <div className="relative aspect-video rounded-xl overflow-hidden mb-4 border border-gray-100 shadow-sm">
                   <img src={stream.thumbnailUrl} alt={stream.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
                   <div className="absolute top-2 left-2 px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded">LIVE</div>
                   <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-black/80 text-white text-[10px] font-bold rounded flex items-center space-x-1">
@@ -96,7 +96,7 @@ export const Videos = () => {
                     </div>
                   </div>
                 </div>
-                <h3 className="font-bold text-sm line-clamp-2 group-hover:text-gold transition-colors mb-2">{stream.title}</h3>
+                <h3 className="font-bold text-sm line-clamp-2 group-hover:text-blue-600 transition-colors mb-2 text-gray-900">{stream.title}</h3>
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span className="font-bold text-gray-400">{stream.streamer}</span>
                   <span>{stream.game}</span>
@@ -109,8 +109,8 @@ export const Videos = () => {
         {/* Videos Section */}
         <section>
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
-            <h2 className="text-3xl font-display font-bold flex items-center space-x-3">
-              <Play className="text-gold" fill="currentColor" />
+            <h2 className="text-3xl font-display font-bold flex items-center space-x-3 text-gray-900">
+              <Play className="text-blue-600" fill="currentColor" />
               <span>Filmy i Materiały</span>
             </h2>
             
@@ -122,8 +122,8 @@ export const Videos = () => {
                   className={cn(
                     "px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all border",
                     activeCategory === cat 
-                      ? "bg-gold text-black border-gold" 
-                      : "bg-dark-surface text-gray-400 border-dark-border hover:border-gray-600"
+                      ? "bg-blue-600 text-white border-blue-600" 
+                      : "bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-300"
                   )}
                 >
                   {cat}
@@ -142,29 +142,29 @@ export const Videos = () => {
                 className="group cursor-pointer"
               >
                 <Link to={`/videos/${video.id}`}>
-                  <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 border border-dark-border shadow-lg">
+                  <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 border border-gray-100 shadow-lg">
                     <img src={video.thumbnailUrl} alt={video.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
                     <div className="absolute bottom-3 right-3 px-2 py-1 bg-black/90 text-white text-xs font-bold rounded font-mono">
                       {video.duration}
                     </div>
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-16 h-16 rounded-full bg-gold/90 flex items-center justify-center shadow-2xl">
-                        <Play size={32} fill="black" className="text-black ml-1" />
+                      <div className="w-16 h-16 rounded-full bg-blue-600/90 flex items-center justify-center shadow-2xl">
+                        <Play size={32} fill="white" className="text-white ml-1" />
                       </div>
                     </div>
                   </div>
                   
                   <div className="flex space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-dark-surface border border-dark-border flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <div className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex-shrink-0 flex items-center justify-center overflow-hidden">
                       <img src={`https://picsum.photos/seed/${video.channel}/100/100`} alt={video.channel} className="w-full h-full object-cover" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg leading-tight group-hover:text-gold transition-colors mb-2 line-clamp-2">
+                      <h3 className="font-bold text-lg leading-tight group-hover:text-blue-600 transition-colors mb-2 line-clamp-2 text-gray-900">
                         {video.title}
                       </h3>
                       <div className="flex flex-wrap items-center text-sm text-gray-500 gap-x-3">
-                        <span className="hover:text-white transition-colors">{video.channel}</span>
+                        <span className="hover:text-gray-900 transition-colors">{video.channel}</span>
                         <div className="flex items-center space-x-1">
                           <Eye size={14} />
                           <span>{video.views} wyświetleń</span>
@@ -182,7 +182,7 @@ export const Videos = () => {
           </div>
 
           <div className="mt-16 text-center">
-            <button className="px-12 py-4 border border-dark-border rounded-2xl text-gray-400 hover:text-gold hover:border-gold transition-all font-bold">
+            <button className="px-12 py-4 border border-gray-200 rounded-2xl text-gray-400 hover:text-blue-600 hover:border-blue-600 transition-all font-bold">
               Załaduj więcej filmów
             </button>
           </div>

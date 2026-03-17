@@ -5,26 +5,30 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
   
-  --color-gold: #D4AF37;
-  --color-gold-light: #F1C40F;
-  --color-gold-dark: #996515;
-  --color-dark-bg: #0A0A0A;
-  --color-dark-surface: #1A1A1A;
-  --color-dark-border: #2A2A2A;
+  --color-gold: #2563EB;
+  --color-gold-light: #3B82F6;
+  --color-gold-dark: #1E40AF;
+  --color-dark-bg: #FFFFFF;
+  --color-dark-surface: #F9FAFB;
+  --color-dark-border: #E5E7EB;
+  --color-primary-blue: #2563EB;
 }
 
 @layer base {
   body {
-    @apply bg-dark-bg text-white font-sans;
+    @apply bg-dark-bg text-gray-900 font-sans;
+  }
+  a {
+    @apply text-primary-blue hover:text-blue-700 transition-colors;
   }
 }
 
-.gold-gradient {
-  background: linear-gradient(135deg, #D4AF37 0%, #F1C40F 50%, #996515 100%);
+.blue-gradient {
+  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #1E40AF 100%);
 }
 
-.gold-text-gradient {
-  background: linear-gradient(135deg, #D4AF37 0%, #F1C40F 50%, #996515 100%);
+.blue-text-gradient {
+  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #1E40AF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

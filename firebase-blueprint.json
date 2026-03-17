@@ -1,0 +1,138 @@
+{
+  "entities": {
+    "Article": {
+      "title": "Article",
+      "description": "A news article or blog post about gaming.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { 
+          "type": "string",
+          "enum": ["PC", "Console", "Mobile", "Esports", "Hardware"]
+        },
+        "author": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "imageUrl": { "type": "string" },
+        "featured": { "type": "boolean" }
+      },
+      "required": ["title", "excerpt", "content", "category", "author", "date", "imageUrl"]
+    },
+    "Video": {
+      "title": "Video",
+      "description": "A video material or stream highlight.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "thumbnailUrl": { "type": "string" },
+        "duration": { "type": "string" },
+        "views": { "type": "string" },
+        "date": { "type": "string" },
+        "category": { "type": "string" },
+        "channel": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["title", "thumbnailUrl", "duration", "category", "channel"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "A game or hardware product in the store.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "imageUrl": { "type": "string" },
+        "platform": { "type": "string" },
+        "rating": { "type": "number" },
+        "description": { "type": "string" },
+        "features": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["title", "price", "imageUrl", "platform"]
+    },
+    "EsportMatch": {
+      "title": "EsportMatch",
+      "description": "An esport match or tournament event.",
+      "type": "object",
+      "properties": {
+        "game": { "type": "string" },
+        "status": { "type": "string", "enum": ["live", "upcoming", "finished"] },
+        "teamA": { "type": "string" },
+        "teamB": { "type": "string" },
+        "scoreA": { "type": "number" },
+        "scoreB": { "type": "number" },
+        "date": { "type": "string" },
+        "time": { "type": "string" }
+      },
+      "required": ["game", "status", "teamA", "teamB"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "A user comment on an article or video.",
+      "type": "object",
+      "properties": {
+        "author": { "type": "string" },
+        "authorAvatar": { "type": "string" },
+        "content": { "type": "string" },
+        "date": { "type": "string" },
+        "likes": { "type": "number" },
+        "targetId": { "type": "string" }
+      },
+      "required": ["author", "content", "date", "targetId"]
+    },
+    "ForumCategory": {
+      "title": "ForumCategory",
+      "description": "A category in the discussion forum.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "topicsCount": { "type": "number" },
+        "postsCount": { "type": "number" }
+      },
+      "required": ["name", "description"]
+    },
+    "SiteConfig": {
+      "title": "SiteConfig",
+      "description": "Global site configuration settings.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "data": { "type": "object" }
+      },
+      "required": ["type", "data"]
+    }
+  },
+  "firestore": {
+    "/articles/{articleId}": {
+      "schema": "Article",
+      "description": "Collection of articles."
+    },
+    "/videos/{videoId}": {
+      "schema": "Video",
+      "description": "Collection of videos."
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of store products."
+    },
+    "/esportMatches/{matchId}": {
+      "schema": "EsportMatch",
+      "description": "Collection of esport matches."
+    },
+    "/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Collection of user comments."
+    },
+    "/forumCategories/{categoryId}": {
+      "schema": "ForumCategory",
+      "description": "Collection of forum categories."
+    },
+    "/siteConfig/{configId}": {
+      "schema": "SiteConfig",
+      "description": "Collection of site configuration documents."
+    }
+  }
+}

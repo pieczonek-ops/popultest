@@ -27,10 +27,10 @@ export const ProductDetail = ({ id }: { id?: string }) => {
     : 0;
 
   return (
-    <div className="pt-32 pb-20">
+    <div className="pt-32 pb-20 bg-white text-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
-        <Link to="/store" className="flex items-center space-x-2 text-gray-500 hover:text-gold transition-colors mb-8 text-sm">
+        <Link to="/store" className="flex items-center space-x-2 text-gray-500 hover:text-blue-600 transition-colors mb-8 text-sm">
           <ChevronLeft size={16} />
           <span>Powrót do sklepu</span>
         </Link>
@@ -39,7 +39,7 @@ export const ProductDetail = ({ id }: { id?: string }) => {
           {/* Product Image & Gallery */}
           <div className="lg:w-1/2">
             <div className="sticky top-32 space-y-4">
-              <div className="aspect-video rounded-2xl overflow-hidden border border-dark-border shadow-2xl bg-dark-surface relative">
+              <div className="aspect-video rounded-2xl overflow-hidden border border-gray-100 shadow-2xl bg-gray-50 relative">
                 <AnimatePresence mode="wait">
                   <motion.img 
                     key={activeImage}
@@ -62,7 +62,7 @@ export const ProductDetail = ({ id }: { id?: string }) => {
                     onClick={() => setActiveImage(img)}
                     className={cn(
                       "aspect-video rounded-lg overflow-hidden border-2 transition-all",
-                      activeImage === img ? "border-gold" : "border-transparent opacity-50 hover:opacity-100"
+                      activeImage === img ? "border-blue-600" : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
                     <img src={img} alt={`${product.title} ${idx}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
@@ -76,7 +76,7 @@ export const ProductDetail = ({ id }: { id?: string }) => {
           <div className="lg:w-1/2">
             <div className="mb-8">
               <div className="flex items-center space-x-4 mb-4">
-                <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-xs font-bold uppercase tracking-widest">
+                <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest border border-blue-100">
                   {product.platform}
                 </span>
                 <span className="flex items-center space-x-1 text-gray-400 text-sm">
@@ -84,24 +84,24 @@ export const ProductDetail = ({ id }: { id?: string }) => {
                   <span>{product.region}</span>
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">{product.title}</h1>
+              <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 text-gray-900">{product.title}</h1>
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-1 text-gold">
+                <div className="flex items-center space-x-1 text-blue-600">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} size={18} fill={i < Math.floor(product.rating) ? "currentColor" : "none"} />
                   ))}
-                  <span className="ml-2 font-bold text-white">{product.rating}</span>
+                  <span className="ml-2 font-bold text-gray-900">{product.rating}</span>
                 </div>
                 <span className="text-gray-500 text-sm">({product.reviewsCount} opinii)</span>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              <div className="bg-dark-surface border border-dark-border rounded-2xl p-8">
+              <div className="bg-gray-50 border border-gray-100 rounded-2xl p-8 shadow-sm">
                 <div className="flex items-baseline space-x-3 mb-6">
-                  <span className="text-4xl font-bold text-white">{product.price.toFixed(2)} zł</span>
+                  <span className="text-4xl font-bold text-gray-900">{product.price.toFixed(2)} zł</span>
                   {product.originalPrice && (
-                    <span className="text-lg text-gray-500 line-through">{product.originalPrice.toFixed(2)} zł</span>
+                    <span className="text-lg text-gray-400 line-through">{product.originalPrice.toFixed(2)} zł</span>
                   )}
                   {discount > 0 && (
                     <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">-{discount}%</span>
@@ -109,7 +109,7 @@ export const ProductDetail = ({ id }: { id?: string }) => {
                 </div>
                 <button 
                   onClick={() => addToCart(product)}
-                  className="w-full py-4 gold-gradient text-black font-bold rounded-xl hover:scale-[1.02] transition-transform flex items-center justify-center space-x-3 mb-4"
+                  className="w-full py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all flex items-center justify-center space-x-3 mb-4 shadow-lg shadow-blue-600/10"
                 >
                   <ShoppingCart size={20} />
                   <span>Kup teraz</span>
@@ -118,36 +118,36 @@ export const ProductDetail = ({ id }: { id?: string }) => {
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-start space-x-3 p-4 bg-dark-surface/50 border border-dark-border rounded-xl">
-                  <ShieldCheck className="text-green-500 flex-shrink-0" size={20} />
+                <div className="flex items-start space-x-3 p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+                  <ShieldCheck className="text-green-600 flex-shrink-0" size={20} />
                   <div>
-                    <p className="text-sm font-bold">Gwarancja GamerGold</p>
+                    <p className="text-sm font-bold text-gray-900">Gwarancja GamerGold</p>
                     <p className="text-xs text-gray-500">Gwarantujemy działanie każdego klucza lub zwrot pieniędzy.</p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3 p-4 bg-dark-surface/50 border border-dark-border rounded-xl">
-                  <Zap className="text-gold flex-shrink-0" size={20} />
+                <div className="flex items-start space-x-3 p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+                  <Zap className="text-blue-600 flex-shrink-0" size={20} />
                   <div>
-                    <p className="text-sm font-bold">Natychmiastowa wysyłka</p>
+                    <p className="text-sm font-bold text-gray-900">Natychmiastowa wysyłka</p>
                     <p className="text-xs text-gray-500">Średni czas dostawy to mniej niż 60 sekund.</p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3 p-4 bg-dark-surface/50 border border-dark-border rounded-xl">
+                <div className="flex items-start space-x-3 p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
                   <Clock className="text-blue-500 flex-shrink-0" size={20} />
                   <div>
-                    <p className="text-sm font-bold">Wsparcie 24/7</p>
+                    <p className="text-sm font-bold text-gray-900">Wsparcie 24/7</p>
                     <p className="text-xs text-gray-500">Nasz zespół jest dostępny o każdej porze dnia i nocy.</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="prose prose-invert prose-gold max-w-none">
-              <h3 className="text-2xl font-display font-bold mb-6 border-b border-dark-border pb-4">O tej grze</h3>
-              <p className="text-gray-400 leading-relaxed">
+            <div className="prose prose-blue max-w-none">
+              <h3 className="text-2xl font-display font-bold mb-6 border-b border-gray-100 pb-4 text-gray-900">O tej grze</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
               </p>
-              <ul className="text-gray-400 space-y-2 mt-6">
+              <ul className="text-gray-600 space-y-2 mt-6">
                 <li>• Platforma: {product.platform}</li>
                 <li>• Region: {product.region}</li>
                 <li>• Gatunek: {product.category}</li>

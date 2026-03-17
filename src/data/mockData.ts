@@ -19,7 +19,7 @@ export const articles: Article[] = [
     category: 'PC',
     author: 'Jan Kowalski',
     date: '2024-03-02',
-    imageUrl: 'https://picsum.photos/seed/console/800/500',
+    imageUrl: 'https://picsum.photos/seed/rpg/1200/600',
     featured: true,
   },
   {

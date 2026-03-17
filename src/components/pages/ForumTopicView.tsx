@@ -64,22 +64,22 @@ export const ForumTopicView = ({ topicId }: { topicId?: string }) => {
   };
 
   return (
-    <div className="pt-24 min-h-screen bg-dark-bg text-gray-300">
+    <div className="pt-24 min-h-screen bg-white text-gray-600">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
         <div className="flex items-center space-x-2 text-xs text-gray-500 mb-6 uppercase tracking-widest">
-          <Link to="/" className="hover:text-gold transition-colors">GamerGold</Link>
+          <Link to="/" className="hover:text-blue-600 transition-colors">GamerGold</Link>
           <ChevronRight size={12} />
-          <Link to="/forum" className="hover:text-gold transition-colors">Forum</Link>
+          <Link to="/forum" className="hover:text-blue-600 transition-colors">Forum</Link>
           <ChevronRight size={12} />
-          <Link to={`/forum/category/${topic.categoryId}`} className="hover:text-gold transition-colors">Kategoria</Link>
+          <Link to={`/forum/category/${topic.categoryId}`} className="hover:text-blue-600 transition-colors">Kategoria</Link>
           <ChevronRight size={12} />
-          <span className="text-gray-300 truncate max-w-[200px]">{topic.title}</span>
+          <span className="text-gray-900 truncate max-w-[200px]">{topic.title}</span>
         </div>
 
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-display font-bold text-white">{topic.title}</h1>
-          <button className="gold-gradient text-black px-6 py-2 rounded-xl font-bold flex items-center space-x-2 hover:scale-105 transition-all">
+          <h1 className="text-3xl font-display font-bold text-gray-900">{topic.title}</h1>
+          <button className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold flex items-center space-x-2 hover:bg-blue-700 transition-all shadow-lg">
             <MessageSquare size={18} />
             <span>Odpowiedz</span>
           </button>
@@ -90,63 +90,63 @@ export const ForumTopicView = ({ topicId }: { topicId?: string }) => {
           {posts.map((post) => {
             const author = getAuthorInfo(post.author);
             return (
-              <div key={post.id} className="bg-dark-surface border border-dark-border rounded-2xl overflow-hidden shadow-xl flex flex-col md:flex-row">
+              <div key={post.id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
                 {/* Author Sidebar */}
-                <div className="w-full md:w-56 bg-black/20 p-6 flex flex-row md:flex-col items-center md:items-center space-x-4 md:space-x-0 border-b md:border-b-0 md:border-r border-dark-border">
+                <div className="w-full md:w-56 bg-gray-50 p-6 flex flex-row md:flex-col items-center md:items-center space-x-4 md:space-x-0 border-b md:border-b-0 md:border-r border-gray-100">
                   <Link to={`/profile/${author.username}`} className="relative group">
-                    <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-dark-border group-hover:border-gold transition-colors mb-3">
+                    <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-gray-200 group-hover:border-blue-600 transition-colors mb-3">
                       <img src={(author as any).avatarUrl} alt={post.author} className="w-full h-full object-cover" />
                     </div>
-                    <div className="absolute -bottom-1 -right-1 p-1 bg-gold rounded-lg text-black">
+                    <div className="absolute -bottom-1 -right-1 p-1 bg-blue-600 rounded-lg text-white">
                       <Shield size={12} />
                     </div>
                   </Link>
                   <div className="text-center md:text-center">
-                    <Link to={`/profile/${author.username}`} className="text-gold font-bold hover:underline block mb-1">
+                    <Link to={`/profile/${author.username}`} className="text-blue-600 font-bold hover:underline block mb-1">
                       {post.author}
                     </Link>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">
+                    <span className="text-[10px] text-gray-400 uppercase tracking-widest block mb-2">
                       {(author as any).rank}
                     </span>
-                    <div className="hidden md:block pt-3 border-t border-dark-border/30 text-[10px] text-gray-600 space-y-1">
-                      <p>Postów: <span className="text-gray-400">{(author as any).stats?.forumPosts || 0}</span></p>
-                      <p>Dołączył: <span className="text-gray-400">{(author as any).joinDate || '2024'}</span></p>
+                    <div className="hidden md:block pt-3 border-t border-gray-200 text-[10px] text-gray-500 space-y-1">
+                      <p>Postów: <span className="text-gray-900 font-bold">{(author as any).stats?.forumPosts || 0}</span></p>
+                      <p>Dołączył: <span className="text-gray-900 font-bold">{(author as any).joinDate || '2024'}</span></p>
                     </div>
                   </div>
                 </div>
 
                 {/* Post Content */}
                 <div className="flex-1 p-6 flex flex-col">
-                  <div className="flex justify-between items-center mb-4 text-[10px] text-gray-500 border-b border-dark-border/30 pb-3">
+                  <div className="flex justify-between items-center mb-4 text-[10px] text-gray-400 border-b border-gray-100 pb-3">
                     <div className="flex items-center space-x-2">
                       <Clock size={12} />
                       <span>Napisano: {post.date}</span>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <button className="hover:text-gold transition-colors">#{(post as any).id}</button>
+                      <button className="hover:text-blue-600 transition-colors">#{(post as any).id}</button>
                     </div>
                   </div>
 
-                  <div className="flex-1 text-gray-300 text-sm leading-relaxed mb-6">
+                  <div className="flex-1 text-gray-700 text-sm leading-relaxed mb-6">
                     {post.content}
                   </div>
 
-                  <div className="flex justify-between items-center pt-4 border-t border-dark-border/30">
+                  <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                     <div className="flex items-center space-x-4">
-                      <button className="flex items-center space-x-1 text-xs text-gray-500 hover:text-gold transition-colors">
+                      <button className="flex items-center space-x-1 text-xs text-gray-500 hover:text-blue-600 transition-colors">
                         <ThumbsUp size={14} />
                         <span>Pomocny ({post.likes})</span>
                       </button>
-                      <button className="flex items-center space-x-1 text-xs text-gray-500 hover:text-gold transition-colors">
+                      <button className="flex items-center space-x-1 text-xs text-gray-500 hover:text-blue-600 transition-colors">
                         <Quote size={14} />
                         <span>Cytuj</span>
                       </button>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <button className="text-gray-600 hover:text-red-500 transition-colors">
+                      <button className="text-gray-400 hover:text-red-500 transition-colors">
                         <Flag size={14} />
                       </button>
-                      <button className="text-gray-600 hover:text-white transition-colors">
+                      <button className="text-gray-400 hover:text-gray-900 transition-colors">
                         <MoreHorizontal size={14} />
                       </button>
                     </div>
@@ -158,17 +158,17 @@ export const ForumTopicView = ({ topicId }: { topicId?: string }) => {
         </div>
 
         {/* Quick Reply */}
-        <div className="mt-12 bg-dark-surface border border-dark-border rounded-2xl p-8 shadow-2xl">
-          <h3 className="text-lg font-display font-bold text-white mb-6">Szybka odpowiedź</h3>
+        <div className="mt-12 bg-gray-50 border border-gray-100 rounded-2xl p-8 shadow-sm">
+          <h3 className="text-lg font-display font-bold text-gray-900 mb-6">Szybka odpowiedź</h3>
           <div className="space-y-4">
             <textarea 
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Napisz swoją odpowiedź..."
-              className="w-full bg-dark-bg border border-dark-border rounded-xl p-4 text-sm focus:border-gold outline-none transition-all min-h-[150px] resize-none"
+              className="w-full bg-white border border-gray-200 rounded-xl p-4 text-sm focus:border-blue-600 outline-none transition-all min-h-[150px] resize-none text-gray-900"
             />
             <div className="flex justify-end">
-              <button className="gold-gradient text-black px-8 py-3 rounded-xl font-bold hover:scale-105 transition-all shadow-lg shadow-gold/10">
+              <button className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/10">
                 Wyślij odpowiedź
               </button>
             </div>
@@ -176,7 +176,7 @@ export const ForumTopicView = ({ topicId }: { topicId?: string }) => {
         </div>
 
         <div className="mt-8">
-          <Link to={`/forum/category/${topic.categoryId}`} className="flex items-center space-x-2 text-sm text-gray-500 hover:text-gold transition-colors">
+          <Link to={`/forum/category/${topic.categoryId}`} className="flex items-center space-x-2 text-sm text-gray-500 hover:text-blue-600 transition-colors">
             <ArrowLeft size={16} />
             <span>Powrót do kategorii</span>
           </Link>
