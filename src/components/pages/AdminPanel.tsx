@@ -260,6 +260,17 @@ export const AdminPanel = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleLogin = async () => {
+    try {
+      setStatus({ type: 'loading', message: 'Logowanie...' });
+      await signInWithGoogle();
+      setStatus(null);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      setStatus({ type: 'error', message: `Błąd logowania: ${error.message || 'Nieznany błąd'}` });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -281,13 +292,22 @@ export const AdminPanel = () => {
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Dostęp Zastrzeżony</h1>
           <p className="text-gray-500 mb-8">Zaloguj się jako administrator, aby zarządzać treścią.</p>
+          
           <button 
-            onClick={signInWithGoogle}
-            className="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all flex items-center justify-center space-x-3 shadow-lg shadow-blue-200"
+            onClick={handleLogin}
+            disabled={status?.type === 'loading'}
+            className="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all flex items-center justify-center space-x-3 shadow-lg shadow-blue-200 disabled:opacity-50"
           >
-            <LogIn size={20} />
+            {status?.type === 'loading' ? <Loader2 className="animate-spin" size={20} /> : <LogIn size={20} />}
             <span>Zaloguj przez Google</span>
           </button>
+
+          {status?.type === 'error' && (
+            <div className="mt-4 p-4 bg-red-50 text-red-700 rounded-xl border border-red-100 text-sm flex items-center gap-2">
+              <AlertCircle size={16} />
+              {status.message}
+            </div>
+          )}
         </motion.div>
       </div>
     );
